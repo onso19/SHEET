@@ -1,34 +1,41 @@
-/*
-class Solution {
-public:
-    vector<vector<int>> dp;
-    int lengthOfLIS(vector<int>& nums) {
-        dp.resize(size(nums), vector<int>(1+size(nums), -1));   // dp[i][j] denotes max LIS starting from i when nums[j] is previous picked element
-        return solve(nums, 0, -1);
+class Solution{
+    public:
+
+ int getLongestChain(vector<vector<int>>& pairs,vector<vector<int>>&memo, int prevIndex, int index){        
+        if(index > pairs.size())return 0;
+     
+        if(prevIndex!= 0 && memo[prevIndex][index] != -1){
+            return memo[prevIndex][index];
+        }
+        
+        int len1=0, len2=0, len3=0;
+        // current apair not overlapping with previous pair
+        
+        if(prevIndex ==0 || pairs[prevIndex-1][1] < pairs[index-1][0]){
+            len1 = getLongestChain(pairs, memo, index, index+1) + 1;// include pair
+            len2 = getLongestChain(pairs, memo, prevIndex, index+1);// skip pair
+        }else{
+            len3 = getLongestChain(pairs, memo, prevIndex, index+1);
+        }
+        
+        memo[prevIndex][index] = max(len1, max(len2, len3));
+        
+        return memo[prevIndex][index];
     }
-    int solve(vector<int>& nums, int i, int prev_i) {
-        if(i >= size(nums)) return 0;
-        if(dp[i][prev_i+1] != -1) return dp[i][prev_i+1];
-        int take = 0, dontTake = solve(nums, i + 1, prev_i);
-        if(prev_i == -1 || nums[i] > nums[prev_i]) take = nums[i]+ solve(nums, i + 1, i); // try picking current element if no previous element is chosen or current > nums[prev_i]
-        return dp[i][prev_i+1] = max(take, dontTake);
-    }
-};
-*/
-/// more optimised
-class Solution {
-public:
-    vector<int> dp;
-    int lengthOfLIS(vector<int>& nums) {
-        dp.resize(size(nums)+1, -1);
-        return solve(nums, 0, -1);
-    }
-    int solve(vector<int>& nums, int i, int prev_i) {
-        if(i >= size(nums)) return 0;
-        if(dp[prev_i+1] != -1) return dp[prev_i+1];
-        int take = 0, dontTake = solve(nums, i + 1, prev_i);
-        if(prev_i == -1 || nums[i] > nums[prev_i])
-            take = nums[i] + solve(nums, i + 1, i);
-        return dp[prev_i+1] = max(take, dontTake);
+    
+    int findLongestChain(vector<vector<int>>& pairs) {
+        sort(begin(pairs), end(pairs));
+        
+        int n = pairs.size();
+        int prev = 0;
+        vector<vector<int>> memo(n+1, vector<int>(n+1,-1));
+        
+        for(int i=0; i<n+1; ++i){
+            memo[i][0] = 0;
+            memo[0][i] = 0;
+        }
+        
+        int res = getLongestChain(pairs,memo, prev, 1);
+        return res;
     }
 };
