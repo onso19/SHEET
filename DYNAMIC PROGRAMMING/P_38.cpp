@@ -1,49 +1,30 @@
-// P 38 can be solve using P_37
+/*
+In this solution, we can think about whether the number is even or odd.
+If the number is even, the number of 1s is equal to the number which is half of it.
+For e.g., the number 8 has the same 1s as the number 4.
+The number 10 has the same amount of 1 bits as number 5.
+That is because number i is just left shift by 1 bit from number i / 2.
+Therefore, they should have the same number of 1 bits.
+
+If the numbers are odd, e.g. 1, 3, 5, 7.
+The number of 1 bits is equal to the number (i - 1) plus 1.
+For e.g., for number 3, the number of 1 bits equals to the number 2 plus 1.
+For number 11, it equals to number 10 + 1.
+*/
 class Solution {
-    bool isPalin(int i, int j, string &s)
-    {
-        while(i <= j) {
-            if(s[i] != s[j]) return false;
-            i++;
-            j--;
-        }
-        return true;
-    }
-    
-    vector<vector<vector<int>>> memo;
-    
-    bool isPartitionPossible(int start, int end, string &s, int total) {
-        if(start > end or total > 3) return false; 
-        
-        // no need to check for more then 3 palindromes strings
-        
-        if(end >= s.size())
-        {
-            if(isPalin(start, end, s) and total == 3) return true;
-            return false;
-        }
-        
-        if(memo[start][end][total] != -1) return memo[start][end][total];
-        
-        bool ans = false;
-        if(isPalin(start, end, s)) 
-        {
-        // if substring from start to end index is palindromic then
-        // increment total which is keeping track how many palindromes found
-        // and also start from the next index to create more substrings
-            ans |= isPartitionPossible(end + 1, end + 1, s, total + 1);
-        }
-        
-        // if not palindromic start take more characters
-        ans |= isPartitionPossible(start, end + 1, s, total);
-        return memo[start][end][total] = ans;
-        
-    }
 public:
-    bool checkPartitioning(string s) {
-        int n = s.size();0
-        memo.resize(n + 1, vector<vector<int>>(n + 1, vector<int>(4, -1)));
-        return isPartitionPossible(0, 0, s, 0); 
-        // startIndex, endIndex, input string, total non-overlapping palindromic                substring found
+    vector<int> countBits(int num) {
+        vector<int> res(num);
+        res.push_back(0);  // for num=0
+        if(num==0) return res;
+        
+        for(int i=1;i<=num;i++){
+            if(i%2==0){
+                res[i]=res[i/2];
+            } else {
+                res[i]=res[i-1]+1;
+            }
+        }
+        return res;
     }
 };
