@@ -14,11 +14,13 @@ class Solution{
         if(prevIndex ==0 || pairs[prevIndex-1][1] < pairs[index-1][0]){
             len1 = getLongestChain(pairs, memo, index, index+1) + 1;// include pair
             len2 = getLongestChain(pairs, memo, prevIndex, index+1);// skip pair
+         memo[prevIndex][index] = max(len1,len2);
         }else{
             len3 = getLongestChain(pairs, memo, prevIndex, index+1);
+      memo[prevIndex][index] =len3;
         }
         
-        memo[prevIndex][index] = max(len1, max(len2, len3));
+        //memo[prevIndex][index] = max(len1, max(len2, len3));
         
         return memo[prevIndex][index];
     }
