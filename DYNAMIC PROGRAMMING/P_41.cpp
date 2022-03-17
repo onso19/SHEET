@@ -10,7 +10,7 @@ public:
         if(i >= size(nums)) return 0;
         if(dp[i][prev_i+1] != -1) return dp[i][prev_i+1];
         int take = 0, dontTake = solve(nums, i + 1, prev_i);
-        if(prev_i == -1 || nums[i] > nums[prev_i]) take = 1 + solve(nums, i + 1, i); // try picking current element if no previous element is chosen or current > nums[prev_i]
+        if(prev_i == -1 || nums[i] > nums[prev_i]) take = nums[i]+ solve(nums, i + 1, i); // try picking current element if no previous element is chosen or current > nums[prev_i]
         return dp[i][prev_i+1] = max(take, dontTake);
     }
 };
@@ -28,7 +28,7 @@ public:
         if(dp[prev_i+1] != -1) return dp[prev_i+1];
         int take = 0, dontTake = solve(nums, i + 1, prev_i);
         if(prev_i == -1 || nums[i] > nums[prev_i])
-            take = 1 + solve(nums, i + 1, i);
+            take = nums[i] + solve(nums, i + 1, i);
         return dp[prev_i+1] = max(take, dontTake);
     }
 };
