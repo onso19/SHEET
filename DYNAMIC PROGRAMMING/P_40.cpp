@@ -1,24 +1,34 @@
+/*
 class Solution {
 public:
-    int numDecodings(string s) {
-        vector<int> dp(s.size()+1,0);
-        int ans=0;
-        ans = recur(s,0,dp);
-        return ans;
+    vector<vector<int>> dp;
+    int lengthOfLIS(vector<int>& nums) {
+        dp.resize(size(nums), vector<int>(1+size(nums), -1));   // dp[i][j] denotes max LIS starting from i when nums[j] is previous picked element
+        return solve(nums, 0, -1);
     }
-    int recur(string s, int pos, vector<int>& dp){
-        if(pos==s.size())return 1;
-        if(s[pos]=='0')return 0;
-        if(pos==s.size()-1)return 1;
-        if(dp[pos]>0)return dp[pos];
-        string b = s.substr(pos,2);
-        
-        int way1 = recur(s,pos+1,dp);
-        int way2=0;
-        if(stoi(b)<=26&&stoi(b)>0){
-            way2 = recur(s,pos+2,dp);
-        }
-        dp[pos]= way1+way2;
-        return dp[pos];
+    int solve(vector<int>& nums, int i, int prev_i) {
+        if(i >= size(nums)) return 0;
+        if(dp[i][prev_i+1] != -1) return dp[i][prev_i+1];
+        int take = 0, dontTake = solve(nums, i + 1, prev_i);
+        if(prev_i == -1 || nums[i] > nums[prev_i]) take = 1 + solve(nums, i + 1, i); // try picking current element if no previous element is chosen or current > nums[prev_i]
+        return dp[i][prev_i+1] = max(take, dontTake);
+    }
+};
+*/
+/// more optimised
+class Solution {
+public:
+    vector<int> dp;
+    int lengthOfLIS(vector<int>& nums) {
+        dp.resize(size(nums)+1, -1);
+        return solve(nums, 0, -1);
+    }
+    int solve(vector<int>& nums, int i, int prev_i) {
+        if(i >= size(nums)) return 0;
+        if(dp[prev_i+1] != -1) return dp[prev_i+1];
+        int take = 0, dontTake = solve(nums, i + 1, prev_i);
+        if(prev_i == -1 || nums[i] > nums[prev_i])
+            take = 1 + solve(nums, i + 1, i);
+        return dp[prev_i+1] = max(take, dontTake);
     }
 };
