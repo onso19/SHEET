@@ -1,95 +1,49 @@
+// P 37 can be solve using P_36
 class Solution {
+    bool isPalin(int i, int j, string &s)
+    {
+        while(i <= j) {
+            if(s[i] != s[j]) return false;
+            i++;
+            j--;
+        }
+        return true;
+    }
+    
+    vector<vector<vector<int>>> memo;
+    
+    bool isPartitionPossible(int start, int end, string &s, int total) {
+        if(start > end or total > 3) return false; 
+        
+        // no need to check for more then 3 palindromes strings
+        
+        if(end >= s.size())
+        {
+            if(isPalin(start, end, s) and total == 3) return true;
+            return false;
+        }
+        
+        if(memo[start][end][total] != -1) return memo[start][end][total];
+        
+        bool ans = false;
+        if(isPalin(start, end, s)) 
+        {
+        // if substring from start to end index is palindromic then
+        // increment total which is keeping track how many palindromes found
+        // and also start from the next index to create more substrings
+            ans |= isPartitionPossible(end + 1, end + 1, s, total + 1);
+        }
+        
+        // if not palindromic start take more characters
+        ans |= isPartitionPossible(start, end + 1, s, total);
+        return memo[start][end][total] = ans;
+        
+    }
 public:
-    int check(string &s, int start, int end)
-    {
-        if(end<start)
-        {
-            return 99999;
-        }
-        // cout<<start<<" "<<end;
-        int ans=0;
-        while(start<end)
-        {
-            if(s[start]!=s[end])
-            {
-                ans++;
-            }
-            start++;
-            end--;
-        }
-        // cout<<" "<<ans<<endl;
-        return ans;
-    }
-    int helper(string &s, int k , int start, int end, int ***arr)
-    {
-        // cout<<start<<" "<<end<<" "<<k<<" "<<endl;
-        if(end<start)
-        {
-            if(k<=0)
-            {
-                // cout<<start<<" "<<end<<" "<<k<<" "<<0<<endl;
-                return 0;
-            }
-            else
-            {
-                // cout<<start<<" "<<end<<" "<<k<<" "<<99999<<endl;
-                return 99999; 
-            }
-        }
-        
-        if(end-start+1 == k)
-        {
-            arr[start][end][k]=0;
-            // cout<<start<<" "<<end<<" "<<k<<" "<<0<<endl;
-            return 0;
-        }
-        if(end-start+1<k)
-        {
-            // cout<<start<<" "<<end<<" "<<k<<" "<<99999<<endl;
-            return 99999;
-        }
-        if(k==1)
-        {
-            int a= check(s,start,end);
-            arr[start][end][k]=a;
-            return a;
-        }
-        if(arr[start][end][k]!=-1)
-        {
-            // cout<<start<<" "<<end<<" "<<k<<" "<<arr[start][end][k]<<endl;
-            return arr[start][end][k];
-        }
-        int ans=99999;
-        for(int i=start;i<=end;i++)
-        {
-            int a=helper(s,1,start,i,arr);
-            int b=helper(s,k-1,i+1,end,arr);
-            ans=min(ans,a+b);
-            
-        }
-        arr[start][end][k]=ans;
-        // cout<<start<<" "<<end<<" "<<k<<" "<<ans<<endl;
-        return ans;
-        
-        
-    }
-    int palindromePartition(string s, int k) {
-        
-        int ***arr=new int**[s.size()];
-        for(int i=0;i<s.size();i++)
-        {
-            arr[i]=new int*[s.size()];
-            for(int j=0;j<s.size();j++)
-            {
-                arr[i][j]=new int[k+1];     
-                for(int m=0;m<=k;m++)
-                {
-                    arr[i][j][m]=-1;
-                }
-            }
-        }
-        
-        return helper(s,k,0,s.size()-1,arr);
-        
+    bool checkPartitioning(string s) {
+        int n = s.size();0
+        memo.resize(n + 1, vector<vector<int>>(n + 1, vector<int>(4, -1)));
+        return isPartitionPossible(0, 0, s, 0); 
+        // startIndex, endIndex, input string, total non-overlapping palindromic                substring found
     }
 };
