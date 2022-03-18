@@ -45,8 +45,8 @@ public:
 
 // also it can b solved using lcs 
 // aditya verma
-b=reverse of a
 
+//b=reverse of a
 if(a[i-1]==b[j-1]){
 t[i][j]=1+lps(i-1,j-1);
 else t[i][j]=0;  
